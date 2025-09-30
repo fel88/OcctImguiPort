@@ -4715,11 +4715,18 @@ void GlfwOcctView::MouseMove(double x, double y)
 }
 
 void GlfwOcctView::MouseScroll(int x, int y, int theOffsetY) {
+	ImGuiIO& aIO = ImGui::GetIO();
+	if (myView.IsNull() || aIO.WantCaptureMouse)
+	{
+		aIO.AddMouseWheelEvent(0, theOffsetY / 120);
+		return;
+	}
+
 	Graphic3d_Vec2i aPos(x, y);
 	UpdateZoom(Aspect_ScrollDelta(aPos, int(theOffsetY / 8.0)));
 
-
 }
+
 void GlfwOcctView::MouseDown(int btn, double x, double y)
 {
 	ImGuiIO& aIO = ImGui::GetIO();
