@@ -777,12 +777,12 @@ public ref class OCCTProxy
 
 
 public:
-	
+
 	static OCCImpl* impl = new OCCImpl();
 	// ============================================
 	// Viewer functionality
 	// ============================================
-	bool InitViewer(System::IntPtr hNativeWindow )
+	bool InitViewer(System::IntPtr hNativeWindow)
 	{
 		try
 		{
@@ -905,13 +905,13 @@ public:
 		myView()->SetLightOff();
 
 		//Handle(WNT_Window) aWNTWindow = new WNT_Window(reinterpret_cast<HWND> (theWnd.ToPointer()));
-		
+
 		Handle(WNT_Window) pWNTWindow = new WNT_Window(reinterpret_cast<HWND> (hNativeWindow.ToPointer()));
 
 		myView()->SetWindow(pWNTWindow, glCtx.ToPointer());
-		
 
-		
+
+
 
 		/*if (!aWNTWindow->IsMapped())
 		{
@@ -1054,7 +1054,7 @@ aView->Update();
 	{
 		if (!myView().IsNull())
 		{
-			myView()->InvalidateImmediate();			
+			myView()->InvalidateImmediate();
 			//FlushViewEvents(myContext, myView, Standard_True);
 
 		}
@@ -1859,7 +1859,7 @@ public:
 	List<ManagedObjHandle^>^ ImportStep(System::String^ name, List<System::Byte>^ bts)
 	{
 		auto buf = new uint8_t[bts->Count];
-		for (int i = 0;i < bts->Count;i++) {
+		for (int i = 0; i < bts->Count; i++) {
 			buf[i] = bts[i];
 		}
 		memstream s(buf, bts->Count);
@@ -2270,17 +2270,17 @@ public:
 
 	void ResetSelectionMode() {
 		Handle(AIS_InteractiveContext) theCtx = myAISContext();
-		
+
 		AIS_ListOfInteractive aDispList;
 		theCtx->DisplayedObjects(aDispList);
 		for (const Handle(AIS_InteractiveObject)& aPrsIter : aDispList)
 		{
 			Handle(AIS_Shape) aShape = Handle(AIS_Shape)::DownCast(aPrsIter);
 			if (aShape.IsNull())
-				continue; 
+				continue;
 
 			theCtx->Deactivate(aShape);
-			
+
 		}
 		//myAISContext()->Deactivate();
 	}
@@ -2299,11 +2299,11 @@ public:
 			if (aShape.IsNull()) { continue; }
 
 			theCtx->Deactivate(aShape);
-			theCtx->Activate(aShape, aSelMode,true);
+			theCtx->Activate(aShape, aSelMode, true);
 		}
-			//myAISContext()->Activate((int)t, true);
-		
-		//currentMode=t;
+		//myAISContext()->Activate((int)t, true);
+
+	//currentMode=t;
 	}
 
 	void Erase(ManagedObjHandle^ h, bool updateViewer) {
@@ -3557,7 +3557,7 @@ public:
 				continue;
 			}
 
-			for (int i = 0;i < vertices.size();i++)
+			for (int i = 0; i < vertices.size(); i++)
 			{
 				auto& vertex = vertices[i];
 				//todo fix
@@ -3630,7 +3630,7 @@ public:
 					if (_vertex.IsNull())
 						continue;
 
-					for (int i = 0;i < vertices.size();i++)
+					for (int i = 0; i < vertices.size(); i++)
 					{
 						auto& vertex = vertices[i];
 						//todo fix
@@ -3668,7 +3668,7 @@ public:
 				continue;
 			}
 
-			for (int i = 0;i < vertices.size();i++)
+			for (int i = 0; i < vertices.size(); i++)
 			{
 				auto& vertex = vertices[i];
 				//todo fix
@@ -3823,7 +3823,7 @@ public:
 		return hh;
 	}
 
-	
+
 
 	static void AttachLineToCompound(BRep_Builder& builder, TopoDS_Compound& compound, double x1, double y1, double z1, double x2, double y2, double z2)
 	{
@@ -4229,7 +4229,7 @@ private:
 		const Handle(V3d_View)& theView) override;
 
 	//! @name GLWF callbacks
-	
+
 private:
 
 	//! Mouse scroll event.
@@ -4288,42 +4288,42 @@ private:
 	bool myToWaitEvents = true;
 
 };
-	
+
 public ref class GlfwOcctViewManaged {
 public:
-	 GlfwOcctViewManaged() {
-		 view = new GlfwOcctView();
+	GlfwOcctViewManaged() {
+		view = new GlfwOcctView();
 	}
-	 void run() {
-		 view->run();
-	 }
-	 void run(IntPtr ptr) {
-		 view->run(ptr.ToPointer());
-	 } 
-	 
-	 void runWnt(IntPtr ptr, IntPtr glctx) {
-		 view->runWnt(ptr, glctx);
-	 }
-	 void MouseMove(int x, int y) {
-		 view->MouseMove(x, y);
-	 }
-	 void Resize(int x, int y) {
-		 view->onResize( x, y);
-	 }
+	void run() {
+		view->run();
+	}
+	void run(IntPtr ptr) {
+		view->run(ptr.ToPointer());
+	}
 
-	 void MouseDown(int btn, int x, int y) {
-		 view->MouseDown(btn,x, y);
-	 }
+	void runWnt(IntPtr ptr, IntPtr glctx) {
+		view->runWnt(ptr, glctx);
+	}
+	void MouseMove(int x, int y) {
+		view->MouseMove(x, y);
+	}
+	void Resize(int x, int y) {
+		view->onResize(x, y);
+	}
 
-	 void MouseUp(int btn, int x, int y) {
-		 view->MouseUp(btn, x, y);
-	 }
-	 void MouseScroll(int x, int y, int offset) {
-		 view->MouseScroll( x, y, offset);
-	 }
-	 void iterate() {
-		 view->iterate();
-	 }
+	void MouseDown(int btn, int x, int y) {
+		view->MouseDown(btn, x, y);
+	}
+
+	void MouseUp(int btn, int x, int y) {
+		view->MouseUp(btn, x, y);
+	}
+	void MouseScroll(int x, int y, int offset) {
+		view->MouseScroll(x, y, offset);
+	}
+	void iterate() {
+		view->iterate();
+	}
 private:
 	GlfwOcctView* view;
 
@@ -4383,7 +4383,7 @@ void GlfwOcctView::run()
 
 void GlfwOcctView::run(void* wnd)
 {
-	initWindow(800, 600,wnd, "OCCT IMGUI");
+	initWindow(800, 600, wnd, "OCCT IMGUI");
 	initViewer();
 	initDemoScene();
 	if (myView.IsNull())
@@ -4405,9 +4405,9 @@ void GlfwOcctView::runWnt(IntPtr wnd, IntPtr glctx)
 
 	initViewer(pWNTWindow.get(), glctx.ToPointer());
 	initDemoScene();
-	if (myView.IsNull())	
+	if (myView.IsNull())
 		return;
-	
+
 
 	myView->MustBeResized();
 	//myOcctWindow->Map();
@@ -4438,9 +4438,9 @@ void GlfwOcctView::initWindow(int theWidth, int theHeight, const char* theTitle)
 		//glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, true);
 		//glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 	}
-	myOcctWindow = new GlfwOcctWindow(theWidth, theHeight, theTitle); 
+	myOcctWindow = new GlfwOcctWindow(theWidth, theHeight, theTitle);
 	glfwSetWindowUserPointer(myOcctWindow->getGlfwWindow(), this);
-	
+
 
 	// window callback
 	glfwSetWindowSizeCallback(myOcctWindow->getGlfwWindow(), GlfwOcctView::onResizeCallback);
@@ -4526,7 +4526,7 @@ void GlfwOcctView::initViewer()
 
 void GlfwOcctView::initViewer(WNT_Window* wnd, void* glctx)
 {
-	
+
 	Handle(Aspect_DisplayConnection) aDisplayConnection;
 	Handle(OpenGl_GraphicDriver) aGraphicDriver
 		= new OpenGl_GraphicDriver(aDisplayConnection);
@@ -4540,7 +4540,7 @@ void GlfwOcctView::initViewer(WNT_Window* wnd, void* glctx)
 	aViewer->ActivateGrid(Aspect_GT_Rectangular, Aspect_GDM_Lines);
 	myView = aViewer->CreateView();
 	//myView->SetImmediateUpdate(Standard_False);
-	
+
 	myView->SetWindow(wnd, glctx);
 	myView->ChangeRenderingParams().ToShowStats = Standard_True;
 
@@ -4564,11 +4564,11 @@ void GlfwOcctView::initGui(void* wnd)
 	ImGuiIO& aIO = ImGui::GetIO();
 	aIO.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	//aIO.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-	
-	
+
+
 	ImGui_ImplWin32_Init(wnd);
 	ImGui_ImplOpenGL3_Init("#version 330");
-	
+
 	// Setup Dear ImGui style.
 	//ImGui::StyleColorsClassic();
 }
@@ -4582,7 +4582,7 @@ void GlfwOcctView::initGui()
 	aIO.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 	//ImGui_ImplGlfw_InitForOpenGL(myOcctWindow->getGlfwWindow(), Standard_True);
-	
+
 	ImGui_ImplOpenGL3_Init("#version 330");
 
 	// Setup Dear ImGui style.
@@ -4599,7 +4599,7 @@ void GlfwOcctView::renderGui()
 	ImGui_ImplWin32_NewFrame();
 
 	ImGui::NewFrame();
-		
+
 	ImGui::ShowDemoWindow();
 
 	// Hello IMGUI.
@@ -4632,7 +4632,7 @@ void GlfwOcctView::renderGui()
 	ImGui::Render();
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	
+
 	//glfwSwapBuffers(myOcctWindow->getGlfwWindow());
 }
 
@@ -4709,12 +4709,12 @@ void GlfwOcctView::mainloop()
 	}
 }
 
-void GlfwOcctView::MouseMove(double x,double y)
+void GlfwOcctView::MouseMove(double x, double y)
 {
 	onMouseMove(x, y);
 }
 
-void GlfwOcctView::MouseScroll(int x,int y,int theOffsetY) {
+void GlfwOcctView::MouseScroll(int x, int y, int theOffsetY) {
 	Graphic3d_Vec2i aPos(x, y);
 	UpdateZoom(Aspect_ScrollDelta(aPos, int(theOffsetY / 8.0)));
 
@@ -4725,9 +4725,12 @@ void GlfwOcctView::MouseDown(int btn, double x, double y)
 	ImGuiIO& aIO = ImGui::GetIO();
 	if (myView.IsNull() || aIO.WantCaptureMouse)
 	{
-			return;
+		aIO.AddMousePosEvent((float)x, (float)y);
+		aIO.AddMouseButtonEvent(btn - 1, true);
+
+		return;
 	}
-	Graphic3d_Vec2i aPos(x,y);
+	Graphic3d_Vec2i aPos(x, y);
 	auto bb = Aspect_VKeyMouse_LeftButton;
 	switch (btn) {
 	case 1:
@@ -4748,6 +4751,8 @@ void GlfwOcctView::MouseUp(int btn, double x, double y)
 	ImGuiIO& aIO = ImGui::GetIO();
 	if (myView.IsNull() || aIO.WantCaptureMouse)
 	{
+		aIO.AddMousePosEvent((float)x, (float)y);
+		aIO.AddMouseButtonEvent(btn - 1, false);
 		return;
 	}
 	Graphic3d_Vec2i aPos(x, y);
@@ -4768,24 +4773,24 @@ void GlfwOcctView::MouseUp(int btn, double x, double y)
 }
 
 void GlfwOcctView::iterate()
-{	
-		// glfwPollEvents() for continuous rendering (immediate return if there are no new events)
-		// and glfwWaitEvents() for rendering on demand (something actually happened in the viewer)
-		if (myToWaitEvents)
-		{
-			glfwWaitEvents();
-		}
-		else
-		{
-			glfwPollEvents();
-		}
-		if (!myView.IsNull())
-		{
-			myView->InvalidateImmediate(); // redraw view even if it wasn't modified
-			FlushViewEvents(myContext, myView, Standard_True);
-			
-			renderGui();
-		}	
+{
+	// glfwPollEvents() for continuous rendering (immediate return if there are no new events)
+	// and glfwWaitEvents() for rendering on demand (something actually happened in the viewer)
+	if (myToWaitEvents)
+	{
+		glfwWaitEvents();
+	}
+	else
+	{
+		glfwPollEvents();
+	}
+	if (!myView.IsNull())
+	{
+		myView->InvalidateImmediate(); // redraw view even if it wasn't modified
+		FlushViewEvents(myContext, myView, Standard_True);
+
+		renderGui();
+	}
 }
 
 // ================================================================
@@ -4836,7 +4841,7 @@ void GlfwOcctView::onResize(int theWidth, int theHeight)
 void GlfwOcctView::onMouseScroll(double theOffsetX, double theOffsetY)
 {
 	ImGuiIO& aIO = ImGui::GetIO();
-	if (!myView.IsNull()  && !aIO.WantCaptureMouse)
+	if (!myView.IsNull() && !aIO.WantCaptureMouse)
 	{
 		UpdateZoom(Aspect_ScrollDelta(myOcctWindow->CursorPosition(), int(theOffsetY * 8.0)));
 	}
@@ -4885,7 +4890,7 @@ void GlfwOcctView::onMouseButton(int theButton, int theAction, int theMods)
 	//ImGuiIO& aIO = ImGui::GetIO();
 	//if (myView.IsNull() || aIO.WantCaptureMouse)
 	{
-	//	return;
+		//	return;
 	}
 
 	const Graphic3d_Vec2i aPos = myOcctWindow->CursorPosition();
