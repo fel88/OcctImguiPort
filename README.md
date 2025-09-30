@@ -1,6 +1,6 @@
 # OcctImguiPort
 
-c# port of https://github.com/eryar/OcctImgui
+C# port of https://github.com/eryar/OcctImgui
 
 There are two options:
 1. GLFW native window
