@@ -1,11 +1,12 @@
 # OcctImguiPort
 
+Occt + ImGui + custom GL render
+
 C# port of https://github.com/eryar/OcctImgui
 
-There are two options:
+There are three options to use:
 1. GLFW native window
 2. WinForm Control (HWND)
+3. OpenTK.GLControl (GLFW) binding
 
-TODO: OpenTK.GLControl (GLFW) binding
-
-<img width="1140" height="721" alt="изображение" src="https://github.com/user-attachments/assets/ae47ab79-1fa4-49f7-b4c6-31917e29de38" />
+<img width="1140" height="721" alt="изображение" src="https://github.com/user-attachments/assets/3703bfe3-bdef-4511-a827-c0eb446d3ef6" />
