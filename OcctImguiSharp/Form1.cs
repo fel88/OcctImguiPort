@@ -39,7 +39,7 @@ namespace WinFormsApp1
         }
 
         private void Form1_FormClosing(object? sender, FormClosingEventArgs e)
-        {
+        {            
             d.cleanup();
         }
         private int CompileProgram(string vertexShader, string fragmentShader)
@@ -484,38 +484,40 @@ void main()
             {
                 d.iterate();
 
-                glcontrol.MakeCurrent();
-                var r = GL.GetBoolean(GetPName.DepthTest);
-                GL.Disable(EnableCap.DepthTest);
+                if (d.showTrinagle)
+                {
+                    glcontrol.MakeCurrent();
+                    var r = GL.GetBoolean(GetPName.DepthTest);
+                    GL.Disable(EnableCap.DepthTest);
 
-                Vector3 cameraPosition = new Vector3(0.0f, 0.0f, 3.0f);
-                Vector3 cameraTarget = new Vector3(0.0f, 0.0f, 0.0f);
-                Vector3 cameraUpVector = new Vector3(0.0f, 1.0f, 0.0f);
+                    Vector3 cameraPosition = new Vector3(0.0f, 0.0f, 3.0f);
+                    Vector3 cameraTarget = new Vector3(0.0f, 0.0f, 0.0f);
+                    Vector3 cameraUpVector = new Vector3(0.0f, 1.0f, 0.0f);
 
-                Matrix4 view = Matrix4.LookAt(cameraPosition, cameraTarget, cameraUpVector);
-                //Matrix4 model = Matrix4.Identity;
-                Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), (float)Width / Height, 0.1f, 100f);
-                 projection = Matrix4.CreateOrthographic(Width, Height,-100.1f, 100f);
-                Matrix4 model = Matrix4.Identity;
-                 model = Matrix4.CreateFromAxisAngle(new Vector3(0.0f, 1.0f, 0.0f), MathHelper.DegreesToRadians(_angle));
-                model *= Matrix4.CreateScale(100, 100, 100);
-                model *= Matrix4.CreateTranslation(-Width / 2+50, 0, 0);
-                _angle += 2.51f;
+                    Matrix4 view = Matrix4.LookAt(cameraPosition, cameraTarget, cameraUpVector);
+                    //Matrix4 model = Matrix4.Identity;
+                    Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), (float)Width / Height, 0.1f, 100f);
+                    projection = Matrix4.CreateOrthographic(Width, Height, -100.1f, 100f);
+                    Matrix4 model = Matrix4.Identity;
+                    model = Matrix4.CreateFromAxisAngle(new Vector3(0.0f, 1.0f, 0.0f), MathHelper.DegreesToRadians(_angle));
+                    model *= Matrix4.CreateScale(100, 100, 100);
+                    model *= Matrix4.CreateTranslation(-Width / 2 + 50, 0, 0);
+                    _angle += 2.51f;
 
-                GL.UseProgram(shaderProgram);
+                    GL.UseProgram(shaderProgram);
 
-                int modelLoc = GL.GetUniformLocation(shaderProgram, "model");
-                int viewLoc = GL.GetUniformLocation(shaderProgram, "view");
-                int projLoc = GL.GetUniformLocation(shaderProgram, "projection");
+                    int modelLoc = GL.GetUniformLocation(shaderProgram, "model");
+                    int viewLoc = GL.GetUniformLocation(shaderProgram, "view");
+                    int projLoc = GL.GetUniformLocation(shaderProgram, "projection");
 
-                GL.UniformMatrix4(modelLoc, false, ref model); // Model matrix (identity for a static object)
-                GL.UniformMatrix4(viewLoc, false, ref view);
-                GL.UniformMatrix4(projLoc, false, ref projection);
-                GL.BindVertexArray(vao);
-                //GL.Color3(Color.Green);
-                GL.DrawArrays(PrimitiveType.Triangles, 0, 3); // Draw 3 vertices a
+                    GL.UniformMatrix4(modelLoc, false, ref model); // Model matrix (identity for a static object)
+                    GL.UniformMatrix4(viewLoc, false, ref view);
+                    GL.UniformMatrix4(projLoc, false, ref projection);
+                    GL.BindVertexArray(vao);
+                    //GL.Color3(Color.Green);
+                    GL.DrawArrays(PrimitiveType.Triangles, 0, 3); // Draw 3 vertices a
 
-
+                }
                 glcontrol.SwapBuffers();
                 //SwapBuffers(GetDC(panel1.Handle));
 

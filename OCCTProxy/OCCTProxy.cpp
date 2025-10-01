@@ -4202,6 +4202,8 @@ public:
 	void MouseUp(int btn, double thePosX, double thePosY);
 	//! Window resize event.
 	void onResize(int theWidth, int theHeight);
+	bool showTriangle;
+
 private:
 
 	//! Create GLFW window.
@@ -4219,7 +4221,6 @@ private:
 
 	//! Render ImGUI.
 	void renderGui();
-
 	//! Fill 3D Viewer with a DEMO items.
 	void initDemoScene();
 
@@ -4302,6 +4303,17 @@ public:
 		view->run();
 	}
 
+	
+	property bool showTrinagle
+	{
+		// The getter for MyProperty
+		bool get()
+		{
+			return view->showTriangle;
+		}
+
+		
+	}
 	void cleanup()
 	{
 		view->cleanup();
@@ -4666,8 +4678,12 @@ void GlfwOcctView::renderGui()
 	ImGui::ShowDemoWindow();
 
 	// Hello IMGUI.
+	ImGui::SetNextWindowSizeConstraints(ImVec2(220, 120), ImVec2(350, 200));
 	ImGui::Begin("Hello");
 	ImGui::Text("Hello ImGui!");
+	
+	ImGui::Checkbox("show triangle",&showTriangle);
+	
 	ImGui::Text("Hello OpenCASCADE!");
 	if (ImGui::Button("OK")) {
 		show_dialog = true;
