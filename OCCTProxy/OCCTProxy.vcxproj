@@ -134,7 +134,7 @@
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)OCCTProxy.dll</OutputFile>
-      <AdditionalLibraryDirectories>C:\git\OcctImguiPort\glfw-3.4.bin.WIN64\lib-vc2022;C:\OpenCASCADE-7.7.0-vc14-64\opencascade-7.7.0\win64\vc14\lib;$(CSF_OCCTLibPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\glfw-3.4.bin.WIN64\lib-vc2022;C:\OpenCASCADE-7.7.0-vc14-64\opencascade-7.7.0\win64\vc14\lib;$(CSF_OCCTLibPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug>true</AssemblyDebug>
       <ProgramDatabaseFile>$(OutDir)OCCTProxy.pdb</ProgramDatabaseFile>
