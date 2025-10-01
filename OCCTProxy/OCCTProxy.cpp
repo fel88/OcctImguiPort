@@ -16,6 +16,7 @@
 
 #include "imgui/imgui_impl_win32.h"
 #include "imgui/imgui_impl_opengl3.h"
+#include "imgui/imgui_impl_glfw.h"
 
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -4186,10 +4187,14 @@ public:
 	//! Destructor.
 	~GlfwOcctView();
 
+	//! Clean up before .
+	void cleanup();
 	//! Main application entry point.
 	void run();
+
 	void run(void* wnd);
 	void runWnt(IntPtr wnd, IntPtr glctx);
+	void runOpenTk(IntPtr wnd, IntPtr glctx);
 	void iterate();
 	void MouseMove(double thePosX, double thePosY);
 	void MouseDown(int btn, double thePosX, double thePosY);
@@ -4206,6 +4211,7 @@ private:
 	//! Create 3D Viewer.
 	void initViewer();
 	void initViewer(WNT_Window* wnd, void* glctx);
+	void initViewer(void* glctx);
 
 	//! Init ImGui.
 	void initGui();
@@ -4221,8 +4227,6 @@ private:
 	void mainloop();
 
 
-	//! Clean up before .
-	void cleanup();
 
 	//! Handle view redraw.
 	void handleViewRedraw(const Handle(AIS_InteractiveContext)& theCtx,
@@ -4297,12 +4301,22 @@ public:
 	void run() {
 		view->run();
 	}
+
+	void cleanup()
+	{
+		view->cleanup();
+
+	}
+
 	void run(IntPtr ptr) {
 		view->run(ptr.ToPointer());
 	}
 
 	void runWnt(IntPtr ptr, IntPtr glctx) {
 		view->runWnt(ptr, glctx);
+	}
+	void runOpenTk(IntPtr ptr, IntPtr glctx) {
+		view->runOpenTk(ptr, glctx);
 	}
 	void MouseMove(int x, int y) {
 		view->MouseMove(x, y);
@@ -4393,6 +4407,23 @@ void GlfwOcctView::run(void* wnd)
 
 	myView->MustBeResized();
 	myOcctWindow->Map();
+	initGui();
+	//mainloop();
+	//cleanup();
+}
+
+void GlfwOcctView::runOpenTk(IntPtr wnd, IntPtr glctx)
+{
+	initWindow(800, 600, wnd.ToPointer(), "OCCT IMGUI");
+	
+	initViewer( glctx.ToPointer());
+	initDemoScene();
+	if (myView.IsNull())
+		return;
+
+
+	myView->MustBeResized();
+	//myOcctWindow->Map();
 	initGui();
 	//mainloop();
 	//cleanup();
@@ -4539,9 +4570,41 @@ void GlfwOcctView::initViewer(WNT_Window* wnd, void* glctx)
 	aViewer->SetDefaultTypeOfView(V3d_PERSPECTIVE);
 	aViewer->ActivateGrid(Aspect_GT_Rectangular, Aspect_GDM_Lines);
 	myView = aViewer->CreateView();
-	//myView->SetImmediateUpdate(Standard_False);
+	//myView->SetImmediateUpd/ate(Standard_False);
 
 	myView->SetWindow(wnd, glctx);
+	myView->ChangeRenderingParams().ToShowStats = Standard_True;
+
+	myContext = new AIS_InteractiveContext(aViewer);
+
+	Handle(AIS_ViewCube) aCube = new AIS_ViewCube();
+	aCube->SetSize(55);
+	aCube->SetFontHeight(12);
+	aCube->SetAxesLabels("", "", "");
+	aCube->SetTransformPersistence(new Graphic3d_TransformPers(Graphic3d_TMF_TriedronPers, Aspect_TOTP_LEFT_LOWER, Graphic3d_Vec2i(100, 100)));
+	aCube->SetViewAnimation(this->ViewAnimation());
+	aCube->SetFixedAnimationLoop(false);
+	myContext->Display(aCube, false);
+}
+
+void GlfwOcctView::initViewer( void* glctx)
+{
+
+	Handle(Aspect_DisplayConnection) aDisplayConnection;
+	Handle(OpenGl_GraphicDriver) aGraphicDriver
+		= new OpenGl_GraphicDriver(aDisplayConnection);
+
+	aGraphicDriver->SetBuffersNoSwap(Standard_True);
+
+	Handle(V3d_Viewer) aViewer = new V3d_Viewer(aGraphicDriver);
+	aViewer->SetDefaultLights();
+	aViewer->SetLightOn();
+	aViewer->SetDefaultTypeOfView(V3d_PERSPECTIVE);
+	aViewer->ActivateGrid(Aspect_GT_Rectangular, Aspect_GDM_Lines);
+	myView = aViewer->CreateView();
+	//myView->SetImmediateUpd/ate(Standard_False);
+
+	myView->SetWindow(myOcctWindow, glctx);
 	myView->ChangeRenderingParams().ToShowStats = Standard_True;
 
 	myContext = new AIS_InteractiveContext(aViewer);
@@ -4581,8 +4644,7 @@ void GlfwOcctView::initGui()
 	ImGuiIO& aIO = ImGui::GetIO();
 	aIO.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-	//ImGui_ImplGlfw_InitForOpenGL(myOcctWindow->getGlfwWindow(), Standard_True);
-
+	ImGui_ImplGlfw_InitForOpenGL(myOcctWindow->getGlfwWindow(), Standard_True);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
 	// Setup Dear ImGui style.
@@ -4596,7 +4658,8 @@ void GlfwOcctView::renderGui()
 	ImGuiIO& aIO = ImGui::GetIO();
 
 	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplWin32_NewFrame();
+	//ImGui_ImplWin32_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
 
 	ImGui::NewFrame();
 
@@ -4785,11 +4848,11 @@ void GlfwOcctView::iterate()
 	// and glfwWaitEvents() for rendering on demand (something actually happened in the viewer)
 	if (myToWaitEvents)
 	{
-		glfwWaitEvents();
+		//glfwWaitEvents();
 	}
 	else
 	{
-		glfwPollEvents();
+	//	glfwPollEvents();
 	}
 	if (!myView.IsNull())
 	{
@@ -4923,6 +4986,8 @@ void GlfwOcctView::onMouseMove(int thePosX, int thePosY)
 	}
 
 	ImGuiIO& aIO = ImGui::GetIO();
+	aIO.AddMousePosEvent((float)thePosX, (float)thePosY);
+
 	if (aIO.WantCaptureMouse)
 	{
 		myView->Redraw();
